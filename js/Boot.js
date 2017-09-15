@@ -34,14 +34,24 @@ Theodoric.Boot.prototype = {
 
         //  Here we load the assets required for our preloader (in this case a background and a loading bar)
         // this.load.image('preloaderBackground', 'images/preloader_background.jpg');
-        this.load.image('logo', 'assets/images/logo.png');
-        this.load.image('preloaderBar', 'assets/images/preload-bar.png');
+//        this.load.image('logo', 'assets/images/logo.png');
+//        this.load.image('preloaderBar', 'assets/images/preload-bar.png');
     },
 
     create: function () {
 
         //  By this point the preloader assets have loaded to the cache, we've set the game settings
         //  So now let's start the real preloader going
+        
+         this.game.stage.backgroundColor = '#fff';
+
+    //scaling options
+    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    
+    //have the game centered horizontally
+    this.scale.pageAlignHorizontally = true;
+    this.scale.pageAlignVertically = true;
+        
         this.state.start('Preloader');
     }
 };

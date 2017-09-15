@@ -59,7 +59,8 @@ Theodoric.Preloader.prototype = {
 	create: function () {
 
 		//	Once the load has finished we disable the crop because we're going to sit in the update loop for a short while as the music decodes
-		this.preloadBar.cropEnabled = false;
+//		this.preloadBar.cropEnabled = false;
+                this.state.start('Game');
 	},
 
 	update: function () {
@@ -73,10 +74,10 @@ Theodoric.Preloader.prototype = {
 		//	If you don't have any music in your game then put the game.state.start line into the create function and delete
 		//	the update function completely.
 		
-		if (this.cache.isSoundDecoded('openingMusic') && this.ready == false)
-			{
-		 	this.ready = true;
-		 	this.state.start('MainMenu');
-		}
+//		if (this.cache.isSoundDecoded('openingMusic') && this.ready == false)
+//			{
+//		 	this.ready = true;
+//		 	
+//		}
 	}
 };

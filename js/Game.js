@@ -1,8 +1,3 @@
-// Credits:
-// http://www.gamedevacademy.org/html5-phaser-tutorial-spacehipster-a-space-exploration-game/
-// http://www.joshmorony.com/how-to-create-an-animated-character-using-sprites-in-phaser/
-// http://jschomay.tumblr.com/post/103568304133/tutorial-building-a-polished-html5-space-shooter
-// http://ezelia.com/2014/tutorial-creating-basic-multiplayer-game-phaser-eureca-io
 
 Theodoric.Game = function (game) {
 
@@ -69,22 +64,14 @@ Theodoric.Game.prototype = {
         this.bossAttacks = this.generateAttacks('fireball', 1, 2000, 300);
 
         // Generate enemies - must be generated after player and player.level
-        this.generateEnemies(100);
+        this.generateEnemies(15);
 
         // Generate bosses
         this.bosses = this.game.add.group();
         this.bosses.enableBody = true;
         this.bosses.physicsBodyType = Phaser.Physics.ARCADE;
 
-        // Music
-		this.music = this.game.add.audio('overworldMusic');
-		this.music.loop = true;
-		this.music.play();
-
-        // Sound effects
-        this.generateSounds();
-
-        // Set the controls
+       // Set the controls
         this.controls = {
             up: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
             left: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
@@ -189,7 +176,6 @@ Theodoric.Game.prototype = {
             this.bossSpawned = true;
             this.goldForBoss += 5000;
             var boss = this.generateDragon(this.bossColorIndex);
-            this.dragonSound.play();
             this.notification = 'A ' + boss.name + ' appeared!';
         }
 
@@ -287,7 +273,6 @@ Theodoric.Game.prototype = {
         this.xp -= this.xpToNext;
         this.xpToNext = Math.floor(this.xpToNext * 1.1);
         this.notification = this.player.name + ' has advanced to level ' + this.player.level + '!';
-        this.levelSound.play();
         var emitter = this.game.add.emitter(this.player.x, this.player.y, 100);
         emitter.makeParticles('levelParticle');
         emitter.minParticleSpeed.setTo(-200, -200);
@@ -309,15 +294,12 @@ Theodoric.Game.prototype = {
             console.log(attacker.name + " used " + attacks.name + "!");
             if (attacks.name === 'sword') {
                 a.rotation = this.game.physics.arcade.moveToPointer(a, attacks.range);
-                this.attackSound.play();
             } else if (attacks.name === 'spell') {
                 a.rotation = this.game.physics.arcade.moveToPointer(a, attacks.range);
                 a.effect = 'spell';
                 a.strength *= 3;
-                this.fireballSound.play();
             } else if (attacks.name === 'fireball') {
                 a.rotation = this.game.physics.arcade.moveToObject(a, this.player, attacks.range);
-                this.fireballSound.play();
             }
         }
     },
@@ -359,7 +341,6 @@ Theodoric.Game.prototype = {
             if (target.health < 0) {
                 target.health = 0;
             }
-            this.playSound(target.name);
             this.notification = attacker.name + ' caused ' + attacker.strength + ' damage to ' + target.name + '!';
 
             if (attacker.effect === 'spell') {
@@ -391,34 +372,28 @@ Theodoric.Game.prototype = {
             if (collectable.name === 'gold') {
                 gain = this.player.level + Math.floor(Math.random() * 10);
                 this.gold += collectable.value;
-                this.goldSound.play();
                 this.notification = 'You pick up ' + collectable.value + ' gold.';
                 collectable.destroy();
             } else if (collectable.name === 'chest') {
                 collectable.animations.play('open');
                 this.gold += collectable.value;
-                this.goldSound.play();
                 this.notification = 'You open a chest and find ' + collectable.value + ' gold!';
                 collectable.lifespan = 1000;
             } else if (collectable.name === 'healthPotion') {
                 player.health += collectable.value;
                 this.notification = 'You consume a potion, healing you for ' + collectable.value + ' health.';
-                this.potionSound.play();
                 collectable.destroy();
             } else if (collectable.name === 'vitalityPotion') {
                 player.vitality += collectable.value;
                 this.notification = 'You consume a potion, increasing your vitality by ' + collectable.value + '!';
-                this.potionSound.play();
                 collectable.destroy();
             } else if (collectable.name === 'strengthPotion') {
                 player.strength += collectable.value;
                 this.notification = 'You consume a potion, increasing your strength by ' + collectable.value + '!';
-                this.potionSound.play();
                 collectable.destroy();
             } else if (collectable.name === 'speedPotion') {
                 player.speed += collectable.value;
                 this.notification = 'You consume a potion, increasing your speed by  ' + collectable.value + '!';
-                this.potionSound.play();
                 collectable.destroy();
             }
 
@@ -443,7 +418,7 @@ Theodoric.Game.prototype = {
         player.body.collideWorldBounds = true
         player.alive = true;
 
-        player.name = 'Theodoric';
+        player.name = 'Juan';
         player.level = 1;
 
         player.health = 100;
@@ -679,7 +654,7 @@ Theodoric.Game.prototype = {
         this.collectables.enableBody = true;
         this.collectables.physicsBodyType = Phaser.Physics.ARCADE;
 
-        var amount = 100;
+        var amount = 115;
         for (var i = 0; i < amount; i++) {
             var point = this.getRandomLocation();
             this.generateChest(point);
@@ -761,47 +736,6 @@ Theodoric.Game.prototype = {
         collectable.name = 'speedPotion'
         collectable.value = 1 + Math.floor(Math.random() * 10);
         return collectable;
-    },
-
-    playSound: function (name) {
-
-        if (name === this.player.name) {
-            this.playerSound.play();
-
-        } else if (name === 'Skeleton') {
-            this.skeletonSound.play();
-
-        } else if (name === 'Slime') {
-            this.slimeSound.play();
-
-        } else if (name === 'Bat') {
-            this.batSound.play();
-
-        } else if (name === 'Ghost') {
-            this.ghostSound.play();
-
-        } else if (name === 'Spider') {
-            this.spiderSound.play();
-
-        } else if (name === 'Dragon') {
-             this.dragonSound.play();
-         }
-    },
-
-    generateSounds: function () {
-
-        this.attackSound = this.game.add.audio('attackSound');
-        this.batSound = this.game.add.audio('batSound');
-        this.fireballSound = this.game.add.audio('fireballSound');
-        this.dragonSound = this.game.add.audio('dragonSound');
-        this.ghostSound = this.game.add.audio('ghostSound');
-        this.goldSound = this.game.add.audio('goldSound');
-        this.levelSound = this.game.add.audio('levelSound');
-        this.playerSound = this.game.add.audio('playerSound');
-        this.potionSound = this.game.add.audio('potionSound');
-        this.skeletonSound = this.game.add.audio('skeletonSound');
-        this.slimeSound = this.game.add.audio('slimeSound');
-        this.spiderSound = this.game.add.audio('spiderSound');
     },
 
     playerMovementHandler: function () {
@@ -890,34 +824,7 @@ Theodoric.Game.prototype = {
         this.player.destroy();
         this.playerAttacks.destroy();
         this.enemies.destroy();
-
-		this.music.stop();
-		this.music.destroy();
-
-        this.attackSound.destroy();
-        this.playerSound.destroy();
-        this.skeletonSound.destroy();
-        this.slimeSound.destroy();
-        this.batSound.destroy();
-        this.ghostSound.destroy();
-        this.spiderSound.destroy();
-        this.goldSound.destroy();
-
-        //  Here you should destroy anything you no longer need.
-        //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
-
-        //  Then let's go back to the main menu.
-        this.game.state.start('MainMenu', true, false, this.xp + this.gold);
-    },
-
-    quitGame: function (pointer) {
-
-        //  Here you should destroy anything you no longer need.
-        //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
-		this.music.stop();
-
-        //  Then let's go back to the main menu.
-        this.game.state.start('MainMenu', true, false, this.xp + this.gold);
+        this.state.start('Game');
     },
 
     rng: function (floor, ceiling) {
